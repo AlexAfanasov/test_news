@@ -17,6 +17,7 @@ import pro.dnomads.cats.di.scope.ActivityScope
 import timber.log.Timber
 import javax.inject.Inject
 
+
 @ActivityScope
 class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEventContract.View {
 
@@ -27,7 +28,8 @@ class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEven
     override lateinit var presenter: ArticleEventContract.Presenter
 
     private lateinit var newsListAdapter: NewsListAdapter
-
+    private val KEY_RECYCLER_STATE = "recycler_state"
+    private var mBundleRecyclerViewState: Bundle? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,11 +67,18 @@ class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEven
     override fun onResume() {
         super.onResume()
         presenter.subscribe(this)
+        mBundleRecyclerViewState?.let {
+            val listState = it.getParcelable<LinearLayoutManager.SavedState>(KEY_RECYCLER_STATE)
+            news_list.layoutManager?.onRestoreInstanceState(listState)
+        }
     }
 
     override fun onPause() {
         super.onPause()
         presenter.unSubscribe()
+        mBundleRecyclerViewState = Bundle()
+        val listState = news_list.layoutManager?.onSaveInstanceState()
+        mBundleRecyclerViewState?.putParcelable(KEY_RECYCLER_STATE, listState)
     }
 
 
