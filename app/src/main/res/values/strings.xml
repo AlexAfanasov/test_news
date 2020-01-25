@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Cats Nomads</string>
+    <string name="error_tap_to_retry">Error happened! Tap to retry.</string>
+</resources>
