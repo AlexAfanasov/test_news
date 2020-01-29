@@ -21,6 +21,7 @@ buildscript {
         navigationVersion = "1.0.0"
         timberVersion = '4.7.1'
         daggerVersion = '2.25.4'
+        moxyVersion = '2.0.2'
     }
     repositories {
         google()
@@ -36,11 +37,17 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0-RC16"
+}
+
 allprojects {
+    apply from: "$rootDir/detekt.gradle"
+
     repositories {
         google()
         jcenter()
-        
+        maven { url "https://jitpack.io" }
     }
 }
 

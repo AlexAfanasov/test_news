@@ -3,6 +3,7 @@ package pro.dnomads.cats.di.fragment
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import moxy.MvpPresenter
 import pro.dnomads.cats.di.scope.ActivityScope
 import pro.dnomads.cats.di.scope.FragmentScope
 import pro.dnomads.cats.presentation.ArticleListPresenter
@@ -21,7 +22,7 @@ interface FragmentsModule {
 
     @ActivityScope
     @Binds
-    fun articlesPresenter(presenter: ArticleListPresenter): ArticleEventContract.Presenter
+    fun articlesPresenter(presenter: ArticleListPresenter): MvpPresenter<ArticleEventContract.View>
 
 
     @FragmentScope
@@ -30,6 +31,6 @@ interface FragmentsModule {
 
     @ActivityScope
     @Binds
-    fun webViewPresenter(presenter: WebViewPresenter): WebViewContract.Presenter
+    fun webViewPresenter(presenter: WebViewPresenter): MvpPresenter<WebViewContract.View>
 
 }

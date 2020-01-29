@@ -9,11 +9,15 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.articles_fragment.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+import moxy.presenter.ProvidePresenterTag
 import pro.dnomads.cats.NewsListAdapter
 import pro.dnomads.cats.R
 import pro.dnomads.cats.State
 import pro.dnomads.cats.data.model.ArticlesItem
 import pro.dnomads.cats.di.scope.ActivityScope
+import pro.dnomads.cats.presentation.ArticleListPresenter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,10 +26,14 @@ import javax.inject.Inject
 class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEventContract.View {
 
     @Inject
-    lateinit var fragment: WebViewFragment
+    @InjectPresenter
+    lateinit var presenter: ArticleListPresenter
+
+    @ProvidePresenterTag(presenterClass = ArticleListPresenter::class)
+    fun provideDialogPresenterTag(): String = "Hello"
 
     @Inject
-    override lateinit var presenter: ArticleEventContract.Presenter
+    lateinit var fragment: WebViewFragment
 
     private lateinit var newsListAdapter: NewsListAdapter
     private val KEY_RECYCLER_STATE = "recycler_state"
@@ -66,7 +74,6 @@ class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEven
 
     override fun onResume() {
         super.onResume()
-        presenter.subscribe(this)
         mBundleRecyclerViewState?.let {
             val listState = it.getParcelable<LinearLayoutManager.SavedState>(KEY_RECYCLER_STATE)
             news_list.layoutManager?.onRestoreInstanceState(listState)
@@ -75,7 +82,6 @@ class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEven
 
     override fun onPause() {
         super.onPause()
-        presenter.unSubscribe()
         mBundleRecyclerViewState = Bundle()
         val listState = news_list.layoutManager?.onSaveInstanceState()
         mBundleRecyclerViewState?.putParcelable(KEY_RECYCLER_STATE, listState)
@@ -87,11 +93,11 @@ class ArticlesListFragment @Inject constructor() : DaggerFragment(), ArticleEven
         view?.findNavController()?.navigate(action)
     }
 
-    private fun retry() {
+    override fun retry() {
         presenter.requestRetry()
     }
 
-    private fun initState() {
+    override fun initState() {
         presenter.getState().observe(viewLifecycleOwner, Observer { state ->
             newsListAdapter.setState(state ?: State.SUCCESS)
         })

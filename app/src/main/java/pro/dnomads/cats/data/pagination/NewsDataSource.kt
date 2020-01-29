@@ -92,6 +92,7 @@ class NewsDataSource @Inject constructor(
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, ArticlesItem>) {
+        //Do nothing: one side load
     }
 
     private fun updateState(state: State) {

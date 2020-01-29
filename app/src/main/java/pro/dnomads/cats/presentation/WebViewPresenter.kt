@@ -1,5 +1,6 @@
 package pro.dnomads.cats.presentation
 
+import moxy.MvpPresenter
 import pro.dnomads.cats.di.scope.ActivityScope
 import pro.dnomads.cats.ui.fragments.WebViewContract
 import javax.inject.Inject
@@ -7,20 +8,11 @@ import javax.inject.Inject
 
 @ActivityScope
 class WebViewPresenter @Inject constructor() :
-    WebViewContract.Presenter {
+    MvpPresenter<WebViewContract.View>() {
 
 
-    override fun start(view: WebViewContract.View, url: String) {
+    fun start(view: WebViewContract.View, url: String) {
         view.initWebView(url)
         view.initWebViewClient()
-    }
-
-    private lateinit var view: WebViewContract.View
-
-    override fun subscribe(view: WebViewContract.View) {
-        this.view = view
-    }
-
-    override fun unSubscribe() {
     }
 }

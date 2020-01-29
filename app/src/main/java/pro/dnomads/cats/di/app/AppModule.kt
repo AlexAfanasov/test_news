@@ -4,7 +4,9 @@ import android.app.Application
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
+import io.reactivex.disposables.CompositeDisposable
 import pro.dnomads.cats.ENDPOINT
+import pro.dnomads.cats.data.pagination.NewsDataSourceFactory
 import pro.dnomads.cats.data.room.NewsDao
 import pro.dnomads.cats.data.room.NewsDb
 import pro.dnomads.cats.retrofitAPI.NewsService
@@ -19,7 +21,16 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideFactory(db: NewsDao, newsService: NewsService, compositeDisposable: CompositeDisposable) =
+        NewsDataSourceFactory(compositeDisposable, newsService, db)
+
+    @Singleton
+    @Provides
     fun provideDb(app: Application) = NewsDb.invoke(app)
+
+    @Singleton
+    @Provides
+    fun provideComposite() = CompositeDisposable()
 
     @Singleton
     @Provides

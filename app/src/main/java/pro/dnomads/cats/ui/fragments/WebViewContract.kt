@@ -1,16 +1,12 @@
 package pro.dnomads.cats.ui.fragments
 
-import pro.dnomads.cats.ui.base.BasePresenter
-import pro.dnomads.cats.ui.base.BaseView
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 interface WebViewContract {
-
-    interface Presenter : BasePresenter<View> {
-        fun start(view: View, url: String)
-    }
-
-
-    interface View : BaseView<Presenter> {
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    interface View : MvpView {
         fun initWebView(startURL: String)
 
         fun initWebViewClient()

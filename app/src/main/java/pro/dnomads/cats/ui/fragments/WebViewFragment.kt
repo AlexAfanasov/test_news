@@ -11,8 +11,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.webview_fragment.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+import moxy.presenter.ProvidePresenterTag
 import pro.dnomads.cats.R
 import pro.dnomads.cats.di.scope.ActivityScope
+import pro.dnomads.cats.presentation.WebViewPresenter
 import javax.inject.Inject
 
 
@@ -20,8 +24,16 @@ import javax.inject.Inject
 class WebViewFragment @Inject constructor() : DaggerFragment(), WebViewContract.View {
 
     private var url: String? = ""
+
     @Inject
-    override lateinit var presenter: WebViewContract.Presenter
+    @InjectPresenter
+    lateinit var presenter: WebViewPresenter
+
+    @ProvidePresenterTag(presenterClass = WebViewPresenter::class)
+    fun provideDialogPresenterTag(): String = "Hello"
+
+    @ProvidePresenter()
+    fun provideDialogPresenter() = WebViewPresenter()
     lateinit var mProgressDialog: ProgressDialog
     override fun onCreateView(
         inflater: LayoutInflater,
